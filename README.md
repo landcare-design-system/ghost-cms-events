@@ -1,3 +1,17 @@
+# Ghost CMS + Events
+
+Experimental native-event fork maintained by the Landcare Design System.
+It adds structured event dates, timezone-aware editor settings, all-day ranges,
+revision recovery and public calendar downloads to Ghost posts.
+
+**This is an evaluation prototype, not an official Ghost release or an approved
+production upgrade.** See the [prototype status and validation record](docs/proposals/event-posts-prototype.md)
+for capabilities, known limits and outstanding release checks.
+
+The original Ghost project documentation and attribution follow below.
+
+---
+
 &nbsp;
 <p align="center">
   <a href="https://ghost.org/#gh-light-mode-only" target="_blank">

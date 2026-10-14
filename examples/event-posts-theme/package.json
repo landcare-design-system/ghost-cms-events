@@ -1,0 +1,19 @@
+{
+  "name": "event-posts-preview",
+  "version": "0.1.0",
+  "description": "Local demonstration of native Ghost event fields",
+  "keywords": [
+    "ghost-theme"
+  ],
+  "license": "MIT",
+  "author": {
+    "name": "Event posts prototype",
+    "email": "events-prototype@example.invalid"
+  },
+  "config": {
+    "posts_per_page": 12
+  },
+  "engines": {
+    "ghost": ">=6.0.0"
+  }
+}

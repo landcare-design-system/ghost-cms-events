@@ -378,10 +378,12 @@ describe('Unit: endpoints/utils/serializers/input/posts', function () {
         const parsedSelectRaw = frame.options.selectRaw?.split(',').map((column) => column.trim());
         assert.deepEqual(
           parsedSelectRaw,
-          columns.filter(
-            (column) =>
-              !['mobiledoc', 'lexical', '@@UNIQUE_CONSTRAINTS@@', '@@INDEXES@@'].includes(column),
-          ),
+          columns
+            .filter(
+              (column) =>
+                !['mobiledoc', 'lexical', '@@UNIQUE_CONSTRAINTS@@', '@@INDEXES@@'].includes(column),
+            )
+            .map((column) => `posts.${column}`),
         );
       });
 

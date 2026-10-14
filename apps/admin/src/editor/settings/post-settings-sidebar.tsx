@@ -16,6 +16,7 @@ import {
 import type { PostCardConfig, PostType } from '@/editor/card-config';
 import { settingsFieldErrorFor } from '@/editor/session/settings-fields';
 import type { EditorSessionHandle } from '@/editor/session/use-editor-session';
+import { EventDetailsSection } from './event-details-section';
 import { AccessSection } from './access-section';
 import { PublishDateSection } from './publish-date-section';
 import { AuthorsSection } from './authors-section';
@@ -136,6 +137,10 @@ export function PostSettingsSidebar({
   const sections: Record<SettingsSectionId, ReactNode> = {
     url: <MemoUrlSection postType={postType} session={session} siteUrl={siteUrl} />,
     'publish-date': <MemoPublishDateSection session={session} />,
+    'event-details':
+      postType === 'post' && !!session.loadedRecord && 'post_kind' in session.loadedRecord ? (
+        <EventDetailsSection session={session} />
+      ) : null,
     tags: canTag ? <MemoTagsSection session={session} /> : null,
     excerpt: hasInlineExcerpt ? null : <ExcerptSection session={session} />,
     featured: canManagePost ? <FeaturedSection postType={postType} session={session} /> : null,

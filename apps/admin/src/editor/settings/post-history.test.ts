@@ -56,6 +56,26 @@ describe('canViewPostHistory', () => {
 });
 
 describe('revisionEntries', () => {
+  it('restores explicit ordinary-post snapshots and ignores pre-feature or malformed snapshots', () => {
+    const details = {
+      post_kind: null,
+      event_all_day: null,
+      event_start_at: null,
+      event_end_at: null,
+      event_timezone: null,
+      event_status: null,
+      event_location: null,
+      event_booking_url: null,
+      event_booking_label: null,
+    };
+    expect(
+      revisionEntries([revision({ event_details: JSON.stringify(details) })])[0].eventDetails,
+    ).toEqual(details);
+    expect(revisionEntries([revision()])[0].eventDetails).toBeUndefined();
+    expect(
+      revisionEntries([revision({ event_details: '{broken' })])[0].eventDetails,
+    ).toBeUndefined();
+  });
   it.each([null, {}, [null], [{ title: 42 }]])('ignores malformed revision data: %j', (input) => {
     expect(revisionEntries(input)).toEqual([]);
   });

@@ -220,3 +220,12 @@ export const settingsKeyboardShortcutsBackButton = 'Close keyboard shortcuts pan
 
 // text fragments
 export const settingsTagsCreateText = 'Create';
+
+// Native event post settings.
+export const settingsEventAllDay = 'settings-event-all-day';
+export const settingsEventToggle = 'settings-event-toggle';
+export const settingsEventStart = 'settings-event-start';
+export const settingsEventFinish = 'settings-event-finish';
+export const settingsEventTimezone = 'settings-event-timezone';
+export const settingsEventLocation = 'settings-event-location';
+export const settingsEventBooking = 'settings-event-booking';

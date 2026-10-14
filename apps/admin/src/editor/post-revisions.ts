@@ -1,6 +1,7 @@
 import { z } from 'zod';
 
 const revisionSchema = z.object({
+  event_details: z.string().nullish(),
   id: z.string().optional(),
   lexical: z.string().nullish(),
   title: z.string().nullish(),

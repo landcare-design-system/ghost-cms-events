@@ -8,6 +8,18 @@
       "type": "object",
       "additionalProperties": false,
       "properties": {
+        "post_kind": { "type": ["string", "null"], "enum": ["event", null] },
+        "event_start_at": { "type": ["string", "null"], "format": "date-time" },
+        "event_end_at": { "type": ["string", "null"], "format": "date-time" },
+        "event_timezone": { "type": ["string", "null"], "maxLength": 100 },
+        "event_status": {
+          "type": ["string", "null"],
+          "enum": ["confirmed", "cancelled", "postponed", null]
+        },
+        "event_location": { "type": ["string", "null"], "maxLength": 500 },
+        "event_booking_url": { "type": ["string", "null"], "maxLength": 2000 },
+        "event_booking_label": { "type": ["string", "null"], "maxLength": 100 },
+        "event_all_day": { "type": ["boolean", "null"] },
         "title": {
           "type": "string",
           "maxLength": 2000

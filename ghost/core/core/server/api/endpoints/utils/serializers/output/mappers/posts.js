@@ -14,6 +14,7 @@ const url = require('../utils/url');
 const utils = require('../../../index');
 
 const postsMetaSchema = require('../../../../../../data/schema').tables.posts_meta;
+const { EVENT_FIELDS } = require('../../../../../../lib/event-posts');
 
 const getPostServiceInstance = require('../../../../../../services/posts/posts-service-instance');
 const postsService = getPostServiceInstance();
@@ -124,6 +125,15 @@ module.exports = async (model, frame, options = {}) => {
   const metaAttrs = _.keys(_.omit(postsMetaSchema, ['id', 'post_id']));
   _(metaAttrs)
     .filter((k) => {
+      // Ordinary public posts retain their existing response shape.
+      if (
+        utils.isContentAPI(frame) &&
+        EVENT_FIELDS.includes(k) &&
+        jsonModel.posts_meta?.post_kind !== 'event' &&
+        !frame.options.columns?.includes(k)
+      ) {
+        return false;
+      }
       return !frame.options.columns || (frame.options.columns && frame.options.columns.includes(k));
     })
     .each((attr) => {
@@ -131,7 +141,13 @@ module.exports = async (model, frame, options = {}) => {
       //       The undefined value is possible because `posts_meta` table is lazily created only one of the
       //       values is assigned.
       const defaultValue = attr === 'email_only' ? false : null;
-      jsonModel[attr] = _.get(jsonModel.posts_meta, attr) || defaultValue;
+      const value = _.get(jsonModel.posts_meta, attr);
+      jsonModel[attr] =
+        attr === 'event_start_at' || attr === 'event_end_at'
+          ? value === null || value === undefined
+            ? null
+            : new Date(value).toISOString()
+          : (value ?? defaultValue);
     });
   delete jsonModel.posts_meta;
 

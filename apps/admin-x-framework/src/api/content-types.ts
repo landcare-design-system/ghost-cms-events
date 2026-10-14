@@ -61,6 +61,7 @@ export type PostTier = {
 };
 
 export type PostRevision = {
+  event_details?: string | null;
   id?: string;
   post_id?: string;
   lexical?: string | null;
@@ -91,7 +92,19 @@ export type ContentListFields = {
 };
 
 /** Fields shared by post and page editor responses. */
-export type ContentEditorFields = {
+export type EventPostFields = {
+  event_all_day?: boolean | null;
+  post_kind?: 'event' | null;
+  event_start_at?: string | null;
+  event_end_at?: string | null;
+  event_timezone?: string | null;
+  event_status?: 'confirmed' | 'cancelled' | 'postponed' | null;
+  event_location?: string | null;
+  event_booking_url?: string | null;
+  event_booking_label?: string | null;
+};
+
+export type ContentEditorFields = EventPostFields & {
   lexical?: string | null;
   mobiledoc?: string | null;
   meta_title?: string | null;
@@ -213,7 +226,8 @@ export type ContentEditableData = Override<
 >;
 
 export type PostEditableData = ContentEditableData &
-  Partial<Pick<Post, 'status' | 'email_subject' | 'email_only'>>;
+  Partial<Pick<Post, 'status' | 'email_subject' | 'email_only'>> &
+  EventPostFields;
 
 export type PageEditableData = ContentEditableData &
   Partial<Pick<Page, 'status' | 'show_title_and_feature_image'>>;

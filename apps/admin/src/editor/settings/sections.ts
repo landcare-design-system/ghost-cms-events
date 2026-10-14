@@ -2,6 +2,7 @@
 export const SETTINGS_SECTION_ORDER = [
   'url',
   'publish-date',
+  'event-details',
   'tags',
   'access',
   'excerpt',

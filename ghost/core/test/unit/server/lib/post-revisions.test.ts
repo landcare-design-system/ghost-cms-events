@@ -48,6 +48,17 @@ function makeRevision(data: any = {}) {
 
 describe('PostRevisions', function () {
   describe('shouldGenerateRevision', function () {
+    it('records event-only changes using the existing explicit-save policy', function () {
+      const revisions = new PostRevisions({ config, model: {} });
+      assert.deepEqual(
+        revisions.shouldGenerateRevision(
+          makePostLike({ event_details: '{"event_location":"Online"}' }),
+          [makeRevision({ event_details: '{"event_location":"Hall"}' })],
+          { forceRevision: true },
+        ),
+        { value: true, reason: 'explicit_save' },
+      );
+    });
     it('should return true if there are no revisions', function () {
       const postRevisions = new PostRevisions({ config, model: {} });
 

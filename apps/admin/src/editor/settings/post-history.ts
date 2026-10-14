@@ -1,4 +1,28 @@
 import moment from 'moment-timezone';
+import { z } from 'zod';
+import type { EventPostFields } from '@tryghost/admin-x-framework/api/content-types';
+const eventSnapshotSchema = z.object({
+  post_kind: z.enum(['event']).nullable(),
+  event_all_day: z.boolean().nullable(),
+  event_start_at: z.string().nullable(),
+  event_end_at: z.string().nullable(),
+  event_timezone: z.string().nullable(),
+  event_status: z.enum(['confirmed', 'cancelled', 'postponed']).nullable(),
+  event_location: z.string().nullable(),
+  event_booking_url: z.string().nullable(),
+  event_booking_label: z.string().nullable().optional(),
+});
+function eventSnapshot(value: string | null | undefined): EventPostFields | undefined {
+  if (!value) {
+    return undefined;
+  }
+  try {
+    const parsed = eventSnapshotSchema.safeParse(JSON.parse(value));
+    return parsed.success ? parsed.data : undefined;
+  } catch {
+    return undefined;
+  }
+}
 import { parsePostRevisions, revisionTime } from '@/editor/post-revisions';
 import type { EditorRecord } from '@/editor/session/projection';
 
@@ -6,6 +30,7 @@ import type { EditorRecord } from '@/editor/session/projection';
 export type RevisionTag = 'latest' | 'published' | 'unpublished';
 
 export interface RevisionEntry {
+  eventDetails?: EventPostFields;
   id: string;
   lexical: string | null;
   title: string;
@@ -65,6 +90,7 @@ export function revisionEntries(revisions: unknown = []): RevisionEntry[] {
     }
 
     return {
+      ...(revision.event_details ? { eventDetails: eventSnapshot(revision.event_details) } : {}),
       id: revision.id ?? String(index),
       lexical: revision.lexical ?? null,
       title: revision.title ?? '',

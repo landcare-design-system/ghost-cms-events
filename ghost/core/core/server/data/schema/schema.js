@@ -227,6 +227,25 @@ module.exports = {
       validations: { isLength: { max: 500 } },
     },
     email_subject: { type: 'string', maxlength: 300, nullable: true },
+    event_all_day: { type: 'boolean', nullable: true },
+    post_kind: {
+      type: 'string',
+      maxlength: 20,
+      nullable: true,
+      validations: { isIn: [['event']] },
+    },
+    event_start_at: { type: 'dateTime', nullable: true, index: true },
+    event_end_at: { type: 'dateTime', nullable: true, index: true },
+    event_timezone: { type: 'string', maxlength: 100, nullable: true },
+    event_status: {
+      type: 'string',
+      maxlength: 20,
+      nullable: true,
+      validations: { isIn: [['confirmed', 'cancelled', 'postponed']] },
+    },
+    event_location: { type: 'string', maxlength: 500, nullable: true },
+    event_booking_url: { type: 'string', maxlength: 2000, nullable: true },
+    event_booking_label: { type: 'string', maxlength: 100, nullable: true },
     frontmatter: { type: 'text', maxlength: 65535, nullable: true },
     feature_image_alt: {
       type: 'string',
@@ -601,6 +620,7 @@ module.exports = {
     created_at: { type: 'dateTime', nullable: false },
   },
   post_revisions: {
+    event_details: { type: 'text', maxlength: 65535, nullable: true },
     id: { type: 'string', maxlength: 24, nullable: false, primary: true },
     post_id: { type: 'string', maxlength: 24, nullable: false, index: true },
     lexical: { type: 'text', maxlength: 1000000000, fieldtype: 'long', nullable: true },

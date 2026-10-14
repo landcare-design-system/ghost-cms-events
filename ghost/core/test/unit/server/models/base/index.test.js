@@ -149,6 +149,17 @@ describe('Models: base', function () {
   });
 
   describe('sanitizeData', function () {
+    it('converts dates inside a one-to-one metadata relation', function () {
+      const data = { posts_meta: { event_start_at: '2040-12-01T22:00:00.000Z' } };
+      Base.Model.sanitizeData.bind({
+        prototype: {
+          tableName: 'posts',
+          relationships: ['posts_meta'],
+          relationshipBelongsTo: { posts_meta: 'posts_meta' },
+        },
+      })(data);
+      assert.equal(data.posts_meta.event_start_at.toISOString(), '2040-12-01T22:00:00.000Z');
+    });
     it('date is invalid', function () {
       const data = testUtils.DataGenerator.forKnex.createPost({
         updated_at: '0000-00-00 00:00:00',

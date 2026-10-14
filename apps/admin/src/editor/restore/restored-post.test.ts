@@ -16,6 +16,20 @@ function copy(overrides: Partial<LocalRevision> = {}): LocalRevision {
 }
 
 describe('restoredPost', () => {
+  it('restores event details without changing the publication status', () => {
+    const fields = {
+      post_kind: 'event',
+      event_start_at: '2040-12-01T22:00:00.000Z',
+      event_end_at: '2040-12-02T00:00:00.000Z',
+      event_timezone: 'Australia/Sydney',
+      event_status: 'confirmed',
+      event_location: 'Hall',
+      event_booking_url: 'https://example.org/book',
+      event_booking_label: 'Reserve a place',
+    };
+    expect(restoredPost(copy(fields))).toMatchObject({ ...fields, status: 'draft' });
+    expect(restoredPost(copy({ ...fields, type: 'page' }))).not.toHaveProperty('post_kind');
+  });
   it('makes a new draft marked as restored from the copy', () => {
     expect(
       restoredPost(

@@ -234,6 +234,15 @@ type AdoptedKey = (typeof ADOPTED_KEYS)[number];
 
 /** What a local copy carries besides the body. */
 const COPIED_FIELD_KEYS = [
+  'post_kind',
+  'event_all_day',
+  'event_start_at',
+  'event_end_at',
+  'event_timezone',
+  'event_status',
+  'event_location',
+  'event_booking_url',
+  'event_booking_label',
   'title',
   'slug',
   'tags',
@@ -551,6 +560,15 @@ export function createEditorSession({
       feature_image: live.feature_image,
       feature_image_alt: live.feature_image_alt,
       feature_image_caption: live.feature_image_caption,
+      post_kind: live.post_kind,
+      event_all_day: live.event_all_day,
+      event_start_at: live.event_start_at,
+      event_end_at: live.event_end_at,
+      event_timezone: live.event_timezone,
+      event_status: live.event_status,
+      event_location: live.event_location,
+      event_booking_url: live.event_booking_url,
+      event_booking_label: live.event_booking_label,
       authors: live.authors.map(({ id }) => ({ id })),
       tags: live.tags.map(({ id, name, slug: tagSlug }) => ({ id, name, slug: tagSlug })),
     };
@@ -997,6 +1015,17 @@ export function createEditorSession({
       // The revision replaces whatever copy was waiting, so the unsaved draft is kept first.
       flushLocalRevision();
       const previous: RestoredRevision = {
+        ...pick(live, [
+          'post_kind',
+          'event_all_day',
+          'event_start_at',
+          'event_end_at',
+          'event_timezone',
+          'event_status',
+          'event_location',
+          'event_booking_url',
+          'event_booking_label',
+        ]),
         lexical: live.lexical,
         title: live.title,
         custom_excerpt: live.custom_excerpt,

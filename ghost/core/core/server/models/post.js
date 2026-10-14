@@ -572,6 +572,13 @@ Post = ghostBookshelf.Model.extend(
     onSaving: async function onSaving(model, attrs, options) {
       options = options || {};
 
+      const { validateEventPost } = require('../lib/event-posts');
+      validateEventPost(
+        { ...model.related('posts_meta').attributes, ...this.get('posts_meta') },
+        this.get('type'),
+        this.get('status'),
+      );
+
       const self = this;
       let title;
       let i;
@@ -988,6 +995,7 @@ Post = ghostBookshelf.Model.extend(
                 filter: `post_id:'${model.id}'`,
                 columns: [
                   'id',
+                  'event_details',
                   'lexical',
                   'created_at',
                   'author_id',
@@ -1007,7 +1015,21 @@ Post = ghostBookshelf.Model.extend(
             .toJSON()
             .sort((a, b) => a.created_at_ts - b.created_at_ts);
 
+          const eventMeta = {
+            ...model.related('posts_meta').attributes,
+            ...model.get('posts_meta'),
+          };
           const current = {
+            event_details: JSON.stringify(
+              Object.fromEntries(
+                require('../lib/event-posts').EVENT_FIELDS.map((key) => [
+                  key,
+                  eventMeta[key] instanceof Date
+                    ? eventMeta[key].toISOString()
+                    : (eventMeta[key] ?? null),
+                ]),
+              ),
+            ),
             id: model.id,
             lexical: model.get('lexical'),
             html: model.get('html'),

@@ -9,6 +9,27 @@ import date from '../../../../core/frontend/helpers/date';
 import moment from 'moment-timezone';
 
 describe('{{date}} helper', function () {
+  it('displays an exclusive all-day finish as its inclusive last day across timezone changes', function () {
+    const options = {
+      hash: { format: 'YYYY-MM-DD', timezone: 'Australia/Sydney', exclusive_end: true },
+      data: { site: { timezone: 'UTC' } },
+    };
+    for (const [end, expected] of [
+      ['2026-10-05T13:00:00.000Z', '2026-10-05'],
+      ['2027-04-05T14:00:00.000Z', '2027-04-05'],
+    ]) {
+      assert.equal(date.call({}, end, options).toString(), expected);
+    }
+    assert.equal(
+      date
+        .call({}, '2026-10-05T13:00:00.000Z', {
+          ...options,
+          hash: { ...options.hash, exclusive_end: false },
+        })
+        .toString(),
+      '2026-10-06',
+    );
+  });
   afterEach(function () {
     sinon.restore();
   });

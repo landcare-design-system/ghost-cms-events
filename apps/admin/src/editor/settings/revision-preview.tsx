@@ -1,7 +1,8 @@
 import DOMPurify from 'dompurify';
+import { DateTime } from 'luxon';
 import { Suspense, useCallback } from 'react';
 import { LoadingIndicator } from '@tryghost/shade/components';
-import { Inline, Text } from '@tryghost/shade/primitives';
+import { Inline, Stack, Text } from '@tryghost/shade/primitives';
 import {
   postHistoryPreview,
   postHistoryPreviewBody,
@@ -99,6 +100,46 @@ export function RevisionPreview({
 
   return (
     <div className="mx-auto w-full max-w-[740px]" data-testid={postHistoryPreview}>
+      {revision.eventDetails ? (
+        <Stack className="mb-6" gap="xs">
+          <Text weight="medium">
+            {revision.eventDetails.post_kind === 'event' ? 'Event details' : 'Ordinary post'}
+          </Text>
+          {revision.eventDetails.post_kind === 'event' ? (
+            <>
+              <Text size="sm">
+                {revision.eventDetails.event_status} · {revision.eventDetails.event_timezone}
+              </Text>
+              <Text size="sm">
+                {revision.eventDetails.event_start_at
+                  ? DateTime.fromISO(revision.eventDetails.event_start_at, {
+                      zone: revision.eventDetails.event_timezone || 'UTC',
+                    }).toFormat(
+                      revision.eventDetails.event_all_day ? 'd LLL yyyy' : 'd LLL yyyy, HH:mm',
+                    )
+                  : 'Start not set'}{' '}
+                –{' '}
+                {revision.eventDetails.event_end_at
+                  ? (() => {
+                      const end = DateTime.fromISO(revision.eventDetails.event_end_at, {
+                        zone: revision.eventDetails.event_timezone || 'UTC',
+                      });
+                      return (
+                        revision.eventDetails.event_all_day ? end.minus({ days: 1 }) : end
+                      ).toFormat(
+                        revision.eventDetails.event_all_day ? 'd LLL yyyy' : 'd LLL yyyy, HH:mm',
+                      );
+                    })()
+                  : 'Finish not set'}
+                {revision.eventDetails.event_all_day ? ' · All day' : ''}
+              </Text>
+              <Text size="sm">{revision.eventDetails.event_location}</Text>
+              <Text size="sm">{revision.eventDetails.event_booking_url}</Text>
+              <Text size="sm">{revision.eventDetails.event_booking_label}</Text>
+            </>
+          ) : null}
+        </Stack>
+      ) : null}
       <ErrorBoundary name="this version" onError={reportKoenigRenderError}>
         <Suspense
           fallback={

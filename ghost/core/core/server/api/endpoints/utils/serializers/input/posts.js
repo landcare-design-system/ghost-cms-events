@@ -48,7 +48,9 @@ function selectAllAllowedColumns(frame) {
     // Because we're returning columns directly from the schema we need to remove info columns like @@UNIQUE_CONSTRAINTS@@ and @@INDEXES@@
     frame.options.selectRaw = _.keys(
       _.omit(postsSchema, ['lexical', 'mobiledoc', '@@INDEXES@@', '@@UNIQUE_CONSTRAINTS@@']),
-    ).join(',');
+    )
+      .map((column) => `posts.${column}`)
+      .join(',');
   } else if (frame.options.columns) {
     frame.options.columns = frame.options.columns.filter((column) => {
       return !['mobiledoc', 'lexical'].includes(column);

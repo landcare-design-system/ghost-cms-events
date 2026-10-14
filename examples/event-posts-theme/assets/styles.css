@@ -1,0 +1,79 @@
+body {
+  margin: 0;
+  background: #f5f5f0;
+  color: #18362f;
+  font:
+    18px/1.6 system-ui,
+    sans-serif;
+}
+main,
+header,
+footer {
+  max-width: 980px;
+  margin: auto;
+  padding: 28px;
+}
+header {
+  border-bottom: 1px solid #ccd7d1;
+}
+a {
+  color: #155c48;
+}
+h1 {
+  font-size: clamp(32px, 5vw, 54px);
+  line-height: 1.15;
+}
+h2 {
+  margin-top: 48px;
+}
+article {
+  background: white;
+  border: 1px solid #d3ddd7;
+  border-radius: 12px;
+  margin: 20px 0;
+  padding: 24px;
+}
+.eyebrow {
+  font-size: 14px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.note {
+  color: #53655c;
+  font-size: 15px;
+}
+.button {
+  display: inline-block;
+  padding: 8px 18px;
+  background: #155c48;
+  color: white;
+  border-radius: 6px;
+}
+.status {
+  font-weight: 700;
+}
+nav a {
+  margin-right: 20px;
+}
+dt {
+  font-weight: 700;
+}
+dd {
+  margin: 0 0 16px;
+}
+.kg-width-wide {
+  width: 100%;
+  max-width: 1100px;
+}
+.kg-width-full {
+  width: 100%;
+  max-width: none;
+}
+body {
+  font-family: var(--gh-font-body, system-ui), sans-serif;
+}
+h1,
+h2,
+h3 {
+  font-family: var(--gh-font-heading, system-ui), sans-serif;
+}

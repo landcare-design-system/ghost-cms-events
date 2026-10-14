@@ -48,6 +48,7 @@ export function PostHistorySection({
   // keeps the excerpt it has rather than losing it to the restore.
   const restore = (revision: RevisionEntry) =>
     session.restoreRevision({
+      ...revision.eventDetails,
       lexical: revision.lexical,
       title: revision.title,
       custom_excerpt: showExcerpt

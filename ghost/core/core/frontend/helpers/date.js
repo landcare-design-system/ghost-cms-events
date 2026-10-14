@@ -48,6 +48,7 @@ module.exports = function (...attrs) {
   const {
     format = 'll',
     timeago,
+    exclusive_end: exclusiveEnd,
     timezone = options.data.site.timezone,
     locale = options.data.site.locale,
   } = options.hash;
@@ -66,6 +67,12 @@ module.exports = function (...attrs) {
     dateMoment = moment.parseZone(date);
   } else {
     dateMoment = timeNow || moment().tz(timezone);
+  }
+
+  // An all-day event stores the midnight after its last day. Display the
+  // inclusive last date without changing that boundary or the stored instant.
+  if (exclusiveEnd === true && !isNaN(testDateInput)) {
+    dateMoment.subtract(1, 'millisecond');
   }
 
   // i18n: Making dates, including month names, translatable to any language.

@@ -19,6 +19,16 @@ export interface LocalRevisionTag {
 
 /** A copy of a post as the editor held it. Entries may carry more fields than these. */
 export interface LocalRevision {
+  event_all_day?: boolean | null;
+  post_kind?: string | null;
+  event_start_at?: string | null;
+  event_end_at?: string | null;
+  event_timezone?: string | null;
+  event_status?: string | null;
+  event_location?: string | null;
+  event_booking_url?: string | null;
+  event_booking_label?: string | null;
+
   id: string;
   type: string;
   revisionTimestamp: number;

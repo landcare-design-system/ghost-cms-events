@@ -7,11 +7,46 @@ import {
   record,
   sessionHarness,
   type HarnessHooks,
+  serializedFields,
 } from '@/editor/session/__test-utils__/session-harness';
 import type { EditorRecord } from './projection';
 import { TITLE_MAX, TITLE_TOO_LONG } from './settings-fields';
 
 describe('createEditorSession', () => {
+  it('restores event details with content and preserves them for an older content-only revision', async () => {
+    const { session, state } = sessionHarness(
+      {
+        record: record({
+          post_kind: 'event',
+          event_location: 'Current venue',
+          event_all_day: true,
+        }),
+      },
+      { applied: serializedFields },
+    );
+    const revision = {
+      lexical: record().lexical!,
+      title: 'Restored title',
+      custom_excerpt: null,
+      feature_image: null,
+      feature_image_alt: null,
+      feature_image_caption: null,
+    };
+    await session.restoreRevision({
+      ...revision,
+      post_kind: 'event',
+      event_all_day: false,
+      event_location: 'Original venue',
+    });
+    expect(state.updates[0].payload).toMatchObject({
+      event_location: 'Original venue',
+      event_all_day: false,
+    });
+    expect(session.getFields().event_location).toBe('Original venue');
+    await session.restoreRevision({ ...revision, title: 'Older revision' });
+    expect(session.getFields().event_location).toBe('Original venue');
+    expect(session.getFields().event_all_day).toBe(false);
+  });
   it('loads a post clean and dirties it on the first edit', () => {
     const { session } = sessionHarness({ record: record() });
 

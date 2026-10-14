@@ -30,6 +30,15 @@ export const SETTINGS_FIELD_KEYS = [
   'twitter_image',
   'twitter_title',
   'twitter_description',
+  'post_kind',
+  'event_all_day',
+  'event_start_at',
+  'event_end_at',
+  'event_timezone',
+  'event_status',
+  'event_location',
+  'event_booking_url',
+  'event_booking_label',
   'show_title_and_feature_image',
 ] as const;
 

@@ -63,13 +63,28 @@ type ExpectedContentEditableKey =
   | 'tags'
   | 'tiers';
 
+type ExpectedEventEditableKey =
+  | 'post_kind'
+  | 'event_all_day'
+  | 'event_start_at'
+  | 'event_end_at'
+  | 'event_timezone'
+  | 'event_status'
+  | 'event_location'
+  | 'event_booking_url'
+  | 'event_booking_label';
+
 const sharedTypeAssertions: [
   Assert<Equal<PostEditableData['canonical_url'], PageEditableData['canonical_url']>>,
   Assert<Equal<Post['title'], Page['title']>>,
   Assert<
     Equal<
       keyof PostEditableData,
-      ExpectedContentEditableKey | 'status' | 'email_subject' | 'email_only'
+      | ExpectedContentEditableKey
+      | ExpectedEventEditableKey
+      | 'status'
+      | 'email_subject'
+      | 'email_only'
     >
   >,
   Assert<

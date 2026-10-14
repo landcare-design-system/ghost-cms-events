@@ -1,4 +1,5 @@
 type PostLike = {
+  event_details?: string | null;
   id: string;
   lexical: string;
   html: string;
@@ -13,6 +14,7 @@ type PostLike = {
 };
 
 type Revision = {
+  event_details?: string | null;
   post_id: string;
   lexical: string;
   author_id: string;
@@ -89,7 +91,8 @@ export class PostRevisions {
       lexicalHasChanged ||
       titleHasChanged ||
       featuredImagedHasChanged ||
-      customExcerptHasChanged
+      customExcerptHasChanged ||
+      latestRevision.event_details !== current.event_details
     ) {
       // CASE: user has explicitly requested a revision by hitting cmd+s or leaving the editor
       if (forceRevision) {
@@ -139,6 +142,7 @@ export class PostRevisions {
 
   convertPostLikeToRevision(input: PostLike, offset = 0): Revision {
     return {
+      ...(input.event_details !== undefined ? { event_details: input.event_details } : {}),
       post_id: input.id,
       lexical: input.lexical,
       created_at_ts: Date.now() - offset,

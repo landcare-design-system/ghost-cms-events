@@ -132,6 +132,9 @@ module.exports = function setupSiteApp(routerConfig) {
   siteApp.use(mw.adminToolbar);
 
   // Theme static assets/files
+  const { createEventCalendarHandler } = require('./routers/event-calendar');
+  siteApp.get('/events/:id/calendar.ics', createEventCalendarHandler({ api, settingsCache }));
+
   siteApp.use(mw.staticTheme());
 
   debug('Static content done');

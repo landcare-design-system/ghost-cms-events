@@ -1,4 +1,5 @@
 import type { PostAuthorInput, PostTagInput } from '@tryghost/admin-x-framework/api/posts';
+import type { EventPostFields } from '@tryghost/admin-x-framework/api/content-types';
 import type { LocalRevision, LocalRevisionTag } from '@/editor/local-revisions';
 
 // Core refuses a longer title or custom excerpt, counted in characters.
@@ -6,7 +7,7 @@ const MAX_TITLE_LENGTH = 255;
 const MAX_EXCERPT_LENGTH = 300;
 
 /** The draft a restore creates from a local copy. */
-export interface RestoredPost {
+export interface RestoredPost extends EventPostFields {
   type: 'post' | 'page';
   title: string;
   slug: string;
@@ -80,6 +81,24 @@ export function restoredPost(
     feature_image: text(revision.feature_image),
     feature_image_alt: text(revision.feature_image_alt),
     feature_image_caption: text(revision.feature_image_caption),
+    ...(revision.type !== 'page' && revision.post_kind === 'event'
+      ? {
+          event_all_day:
+            typeof revision.event_all_day === 'boolean' ? revision.event_all_day : null,
+          post_kind: 'event',
+          event_start_at: text(revision.event_start_at),
+          event_end_at: text(revision.event_end_at),
+          event_timezone: text(revision.event_timezone),
+          event_status: ['confirmed', 'cancelled', 'postponed'].includes(
+            revision.event_status ?? '',
+          )
+            ? revision.event_status
+            : undefined,
+          event_location: text(revision.event_location),
+          event_booking_url: text(revision.event_booking_url),
+          event_booking_label: text(revision.event_booking_label),
+        }
+      : {}),
   };
 
   return {

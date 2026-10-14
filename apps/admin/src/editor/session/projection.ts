@@ -36,6 +36,15 @@ export function newPostProjection(currentUserId?: string): EditablePostProjectio
     twitter_image: null,
     twitter_title: null,
     twitter_description: null,
+    post_kind: null,
+    event_all_day: null,
+    event_start_at: null,
+    event_end_at: null,
+    event_timezone: null,
+    event_status: null,
+    event_location: null,
+    event_booking_url: null,
+    event_booking_label: null,
     show_title_and_feature_image: null,
     updated_at: null,
   };
@@ -74,6 +83,15 @@ export function projectionOf(record: EditorRecord): EditablePostProjection {
     twitter_image: record.twitter_image ?? null,
     twitter_title: record.twitter_title ?? null,
     twitter_description: record.twitter_description ?? null,
+    post_kind: record.post_kind ?? null,
+    event_all_day: record.event_all_day ?? null,
+    event_start_at: record.event_start_at ?? null,
+    event_end_at: record.event_end_at ?? null,
+    event_timezone: record.event_timezone ?? null,
+    event_status: record.event_status ?? null,
+    event_location: record.event_location ?? null,
+    event_booking_url: record.event_booking_url ?? null,
+    event_booking_label: record.event_booking_label ?? null,
     show_title_and_feature_image:
       'show_title_and_feature_image' in record
         ? (record.show_title_and_feature_image ?? null)
@@ -94,6 +112,7 @@ export function latestRevisionOf(record: EditorRecord | undefined): RevisionProj
   );
 
   return {
+    event_details: latest.event_details,
     lexical: latest.lexical ?? null,
     title: latest.title ?? '',
     custom_excerpt: latest.custom_excerpt ?? null,

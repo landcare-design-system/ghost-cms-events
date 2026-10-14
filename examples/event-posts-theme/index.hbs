@@ -1,0 +1,14 @@
+{{!< default}}
+<h1>Connect with your audience</h1><p>Event posts keep the announcement date and the event date separate.</p>
+<h2>Upcoming and underway</h2><p class="note">Confirmed events, nearest start first. Events remain here until they finish.</p>
+{{#get "posts" filter=(concat "post_kind:event+event_status:confirmed+event_end_at:>'" (date timezone="UTC" format="YYYY-MM-DD HH:mm:ss") "'") order="event_start_at asc,id asc" limit="20"}}
+{{#foreach posts}}{{> event-card}}{{else}}<p>No upcoming events.</p>{{/foreach}}
+{{/get}}
+<h2>Past events</h2><p class="note">Most recent event first, regardless of publication date.</p>
+{{#get "posts" filter=(concat "post_kind:event+event_end_at:<='" (date timezone="UTC" format="YYYY-MM-DD HH:mm:ss") "'") order="event_start_at desc,id desc" limit="20"}}
+{{#foreach posts}}{{> event-card}}{{else}}<p>No past events.</p>{{/foreach}}
+{{/get}}
+<h2>Cancelled or postponed</h2>
+{{#get "posts" filter="post_kind:event+event_status:[cancelled,postponed]" order="event_start_at asc,id asc" limit="20"}}
+{{#foreach posts}}{{> event-card}}{{else}}<p>No cancelled or postponed events.</p>{{/foreach}}
+{{/get}}

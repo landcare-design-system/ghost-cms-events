@@ -1124,6 +1124,9 @@ importers:
       '@tryghost/test-data':
         specifier: workspace:*
         version: link:../../packages/testing/test-data
+      '@types/luxon':
+        specifier: 'catalog:'
+        version: 3.7.4
       '@types/node':
         specifier: 'catalog:'
         version: 22.20.1

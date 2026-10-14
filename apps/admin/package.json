@@ -82,6 +82,7 @@
     "@testing-library/jest-dom": "catalog:",
     "@testing-library/react": "catalog:",
     "@tryghost/test-data": "workspace:*",
+    "@types/luxon": "catalog:",
     "@types/node": "catalog:",
     "@types/papaparse": "5.5.2",
     "@types/react": "catalog:",

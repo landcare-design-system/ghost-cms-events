@@ -1,3 +1,4 @@
+import type { EventPostFields } from '@tryghost/admin-x-framework/api/content-types';
 import { dequal } from 'dequal';
 import { lexicalEquals, type LexicalInput } from '@/editor/engine/lexical-compare';
 import { pick } from '@/editor/engine/pick';
@@ -33,7 +34,7 @@ export interface PostRelationLike {
 }
 
 // Client-owned editable fields only; other server metadata lives with the save engine.
-export interface EditablePostProjection {
+export interface EditablePostProjection extends EventPostFields {
   title: string;
   slug: string;
   lexical: string | null;
@@ -67,18 +68,20 @@ export interface EditablePostProjection {
 
 export type EditablePostPatch = Partial<EditablePostProjection>;
 
-export type RestoredRevision = Pick<
-  EditablePostProjection,
-  | 'lexical'
-  | 'title'
-  | 'custom_excerpt'
-  | 'feature_image'
-  | 'feature_image_alt'
-  | 'feature_image_caption'
->;
+export type RestoredRevision = EventPostFields &
+  Pick<
+    EditablePostProjection,
+    | 'lexical'
+    | 'title'
+    | 'custom_excerpt'
+    | 'feature_image'
+    | 'feature_image_alt'
+    | 'feature_image_caption'
+  >;
 
 // The server's own revision projection (post-revisions.ts).
 export interface RevisionProjection {
+  event_details?: string | null;
   lexical: string | null;
   title: string;
   custom_excerpt?: string | null;
@@ -142,6 +145,15 @@ const PROJECTION_KEYS: ReadonlyArray<ProjectionKey> = [
   'twitter_image',
   'twitter_title',
   'twitter_description',
+  'post_kind',
+  'event_all_day',
+  'event_start_at',
+  'event_end_at',
+  'event_timezone',
+  'event_status',
+  'event_location',
+  'event_booking_url',
+  'event_booking_label',
   'show_title_and_feature_image',
   'updated_at',
 ];
@@ -427,6 +439,7 @@ export function createChangeTracker(options: ChangeTrackerOptions = {}): ChangeT
         return;
       }
       const adopted = clonePlain({
+        ...restored,
         lexical: restored.lexical,
         title: restored.title,
         custom_excerpt: restored.custom_excerpt,
@@ -471,6 +484,24 @@ export function createChangeTracker(options: ChangeTrackerOptions = {}): ChangeT
         return true;
       }
       try {
+        if (latestRevision.event_details) {
+          const snapshot = JSON.parse(latestRevision.event_details) as Record<string, unknown>;
+          if (
+            [
+              'post_kind',
+              'event_all_day',
+              'event_start_at',
+              'event_end_at',
+              'event_timezone',
+              'event_status',
+              'event_location',
+              'event_booking_url',
+              'event_booking_label',
+            ].some((key) => snapshot[key] !== (saved?.[key as ProjectionKey] ?? null))
+          ) {
+            return true;
+          }
+        }
         return !sameLexical(saved.lexical, latestRevision.lexical);
       } catch {
         return true;

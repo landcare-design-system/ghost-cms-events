@@ -137,7 +137,7 @@ module.exports = function (Bookshelf) {
             if (!Array.isArray(data[property])) {
               relations = [data[property]];
             }
-            _.each(relations, (relation, indexInArr) => {
+            _.each(relations, (relation) => {
               _.each(relation, (relationValue, relationProperty) => {
                 if (
                   relationValue !== null &&
@@ -159,7 +159,7 @@ module.exports = function (Bookshelf) {
                     });
                   }
 
-                  data[property][indexInArr][relationProperty] = moment(relationValue).toDate();
+                  relation[relationProperty] = moment(relationValue).toDate();
                 }
               });
             });

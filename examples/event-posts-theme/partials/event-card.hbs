@@ -1,0 +1,11 @@
+<article>
+  <div class="eyebrow">{{event_status}}</div>
+  <h3><a href="{{url}}">{{title}}</a></h3>
+  {{#if event_all_day}}
+    <p>{{date event_start_at timezone=event_timezone format="ddd D MMM YYYY"}}{{#match (date event_start_at timezone=event_timezone format="YYYY-MM-DD") "!=" (date event_end_at timezone=event_timezone exclusive_end=true format="YYYY-MM-DD")}} — {{date event_end_at timezone=event_timezone exclusive_end=true format="ddd D MMM YYYY"}}{{/match}} · All day</p>
+  {{else}}
+    <p><time datetime="{{event_start_at}}">{{date event_start_at timezone=event_timezone format="ddd D MMM YYYY, h:mm a z"}}</time> — <time datetime="{{event_end_at}}">{{date event_end_at timezone=event_timezone format="ddd D MMM YYYY, h:mm a z"}}</time></p>
+  {{/if}}
+  <p>{{event_location}}</p>
+  <p class="note">Timezone: {{event_timezone}} · Announcement published {{date published_at format="D MMM YYYY"}}</p>
+</article>
